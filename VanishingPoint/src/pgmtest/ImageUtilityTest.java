@@ -10,21 +10,22 @@ import pgmutilities.PGM;
  *
  * @author user
  */
-public class ImageUtilityTest
-{
-     /**
+public class ImageUtilityTest {
+
+    /**
      * @param args the command line arguments
      */
-    public static void main(String[] args){
-        String namefile = "";
+    public static void main(String[] args) {
+        String namefile = "image.pgm";
 
-        System.out.println(args[0]);
+        //System.out.println(args[0]);
         PgmUtilities pgmUtil = new PgmUtilities();
-        
+
         PGM imgIn = pgmUtil.readPGM(namefile);
 
-        if(imgIn == null)
+        if (imgIn == null) {
             return;
+        }
 
         PGM imgOut = pgmUtil.newPGM(imgIn.getWidth(), imgIn.getHeight(), imgIn.getMax_val());
 
@@ -41,27 +42,28 @@ public class ImageUtilityTest
         pgmUtil.resetPGM(imgOut);
         imgOut = pgmUtil.invertPGM(imgIn);
         pgmUtil.writePGM(imgOut, "invert.pgm");
-
+        
+        //isotropic image
+        pgmUtil.resetPGM(imgOut);
+        imgOut = pgmUtil.isotropicPGM(imgIn);
+        pgmUtil.writePGM(imgOut, "isotropic.pgm");
+        
         // calculate histogram and write it in a file
         int i;
         int[] histogram = pgmUtil.histogramPGM(imgIn);
 
         FileWriter fstream;
-        try
-        {
+        try {
             fstream = new FileWriter("histogram.dat");
             BufferedWriter out = new BufferedWriter(fstream);
 
-            for(i=0; i<256; i++)
-            {
+            for (i = 0; i < 256; i++) {
                 System.out.println("HISTOGRAM[" + i + "] = " + histogram[i]);
                 out.write(i + " " + histogram[i] + "\n");
             }
 
             out.close();
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             System.err.println("\nIOException. Check input Data.");
         }
     }

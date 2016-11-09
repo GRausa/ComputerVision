@@ -4,22 +4,21 @@ package pgmutilities;
  *
  * @author user
  */
-public class PGM
-{
-  private int width;
-  private int height;
-  private int max_val;
-  private int[] pixels;
+public class PGM {
 
-  public PGM(int width, int height, int max_val)
-  {
-      this.width = width;
-      this.height = height;
-      this.max_val = max_val;
-      this.pixels = new int[width*height];
-  }
+    private int width;
+    private int height;
+    private int max_val;
+    private int[] pixels;
 
-   /**
+    public PGM(int width, int height, int max_val) {
+        this.width = width;
+        this.height = height;
+        this.max_val = max_val;
+        this.pixels = new int[width * height];
+    }
+
+    /**
      * @return the width
      */
     public int getWidth() {
