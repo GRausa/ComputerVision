@@ -353,6 +353,9 @@ public class PgmUtilities {
                         outPixels[i * width + j]=0; 
                     }                                      
                 }
+                else{
+                    outPixels[i * width + j]=0;
+                }
             }
         }
 
