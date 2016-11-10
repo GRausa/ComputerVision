@@ -359,8 +359,9 @@ public class PgmUtilities {
         System.out.println("MediaGm: "+mediaGm);
         
         //threshold in base alla media Gm
+        //Gm * 2 il risultato mi sembra migliore
         for(i=0 ; i<width*height ; i++){
-            if(outPixels[i]<50){
+            if(outPixels[i]<mediaGm*2){
                 outPixels[i]=0;
             }
             else{

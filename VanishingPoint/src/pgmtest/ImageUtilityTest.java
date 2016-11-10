@@ -16,7 +16,7 @@ public class ImageUtilityTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String namefile = "leo.pgm";
+        String namefile = "image.pgm";
 
         //System.out.println(args[0]);
         PgmUtilities pgmUtil = new PgmUtilities();
@@ -46,7 +46,7 @@ public class ImageUtilityTest {
         //isotropic image
         pgmUtil.resetPGM(imgOut);
         imgOut = pgmUtil.isotropicPGM(imgIn);
-        pgmUtil.writePGM(imgOut, "image_isotropic3.pgm");
+        pgmUtil.writePGM(imgOut, "isotropic.pgm");
         
         // calculate histogram and write it in a file
         int i;
