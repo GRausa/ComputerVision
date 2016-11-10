@@ -73,4 +73,30 @@ public class PGM {
     public void setPixels(int[] pixels) {
         this.pixels = pixels;
     }
+    
+    /**
+     *  numero pixel sotto soglia 128
+     */    
+    public int getNumberPixelsUnder128(){
+        int count = 0;
+        for(int i=0 ; i<width*height ; i++){
+            if(pixels[i]<128){
+                count+=1;
+            }
+        }
+        return count;
+    }
+    
+    /**
+     * numero pixel sopra soglia 128
+     */
+    public int getNumberPixelsOver128(){
+        int count = 0;
+        for(int i=0 ; i<width*height ; i++){
+            if(pixels[i]>=128){
+                count+=1;
+            }
+        }
+        return count;
+    }
 }

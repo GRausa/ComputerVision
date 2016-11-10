@@ -327,14 +327,14 @@ public class PgmUtilities {
         PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
 
         int i,j;
-        float Gx, Gy, Gm;
+        float Gx, Gy, Gm, sumGm=0;
 
         int width = pgmIn.getWidth();
         int height = pgmIn.getHeight();
 
         int[] inPixels = pgmIn.getPixels();
         int[] outPixels = new int[width * height];
-
+        
         // Modify Pixels
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
@@ -344,19 +344,27 @@ public class PgmUtilities {
                     //maschera 
                     Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i+1) * width + (j-1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
                     Gy = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i-1) * width + j] - inPixels[(i-1) * width + (j+1)] + inPixels[(i+1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i+1) * width + j] + inPixels[(i+1) * width + (j+1)]);
-                  
                     Gm = (float) Math.sqrt(Math.pow(Gx, 2)+Math.pow(Gy, 2));
-
-                    if(Gm>250){
-                        outPixels[i * width + j]=255;  
-                    }
-                    else{
-                        outPixels[i * width + j]=0; 
-                    }                                      
+                    outPixels[i * width + j]=(int) Gm;        
+                    sumGm+=Gm;
                 }
                 else{
                     outPixels[i * width + j]=0;
                 }
+            }
+        }
+        
+        //media Gm
+        int mediaGm = (int) sumGm/inPixels.length;
+        System.out.println("MediaGm: "+mediaGm);
+        
+        //threshold in base alla media Gm
+        for(i=0 ; i<width*height ; i++){
+            if(outPixels[i]<50){
+                outPixels[i]=0;
+            }
+            else{
+                outPixels[i]=255;
             }
         }
         
