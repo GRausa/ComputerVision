@@ -46,7 +46,7 @@ public class ImageUtilityTest {
         //isotropic image
         pgmUtil.resetPGM(imgOut);
         imgOut = pgmUtil.isotropicPGM(imgIn);
-        pgmUtil.writePGM(imgOut, "isotropic.pgm");
+        pgmUtil.writePGM(imgOut, "image_isotropic.pgm");
         
         // calculate histogram and write it in a file
         int i;

@@ -326,7 +326,8 @@ public class PgmUtilities {
         //Isotropic delete one row and one coloumn
         PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
 
-        int i,j, Gx, Gy, Gm;
+        int i,j;
+        float Gx, Gy, Gm;
 
         int width = pgmIn.getWidth();
         int height = pgmIn.getHeight();
@@ -341,12 +342,12 @@ public class PgmUtilities {
                 //No Bordi
                 if(i!=0 & j!=0 & j!=width-1 & i!=height-1){
                     //maschera 
-                    Gx = (int) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i+1) * width + (j-1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
-                    Gy = (int) ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] + inPixels[(i+1) * width + (j+1)]);
+                    Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i+1) * width + (j-1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
+                    Gy = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i-1) * width + j] - inPixels[(i-1) * width + (j+1)] + inPixels[(i+1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i+1) * width + j] + inPixels[(i+1) * width + (j+1)]);
                   
-                    Gm = (int) Math.sqrt(Math.pow(Gx, 2)+Math.pow(Gy, 2));
+                    Gm = (float) Math.sqrt(Math.pow(Gx, 2)+Math.pow(Gy, 2));
 
-                    if(Gm>500){
+                    if(Gm>250){
                         outPixels[i * width + j]=255;  
                     }
                     else{
@@ -358,7 +359,7 @@ public class PgmUtilities {
                 }
             }
         }
-
+        
         pgmOut.setPixels(outPixels);
 
         return pgmOut;
