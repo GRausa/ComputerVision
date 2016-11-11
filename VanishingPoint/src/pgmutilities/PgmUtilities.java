@@ -361,7 +361,7 @@ public class PgmUtilities {
         //threshold in base alla media Gm
         //Gm * 2 il risultato mi sembra migliore
         for(i=0 ; i<width*height ; i++){
-            if(outPixels[i]<mediaGm*2){
+            if(outPixels[i]<mediaGm*2.5){
                 outPixels[i]=0;
             }
             else{
@@ -372,6 +372,50 @@ public class PgmUtilities {
         pgmOut.setPixels(outPixels);
 
         return pgmOut;
+    }
+    
+    //--------------------------------------------------------//
+    //------------------- Spazio Parametri -------------------//
+    //--------------------------------------------------------// 
+    public int[][] spazioParametri (PGM pgmIn) {
+        if (pgmIn == null) {
+            System.err.println("Error! No input data. Please Check.");
+            return null;
+        }
+        int i,j;
+        int width = pgmIn.getWidth();
+        int height = pgmIn.getHeight();
+        
+        PGM pgmModuloIsotropic = this.isotropicPGM(pgmIn);
+        //PGM pgmFaseIsotropic = this.isotropicFasePgm(pgmIn(;
+        int maxFase = 180;
+        int maxDistanza = (int) Math.sqrt(Math.pow(pgmIn.getHeight(), 2)+Math.pow(pgmIn.getWidth(), 2));
+        
+        int[] inPixels = pgmModuloIsotropic.getPixels();
+        //int [] inPixelsFase = pgmFaseIsotropic.getPixels();
+        int[][] matSpazioParametri = new int[maxDistanza][maxFase];
+        
+        //azzero SpazioParametri
+        for(i=0 ; i<maxDistanza ; i++){
+            for(j=0 ; j<maxFase ; j++){
+                matSpazioParametri[i][j]=0;
+            }
+        }
+        int distanza, fase;
+        // Modify Pixels
+        for (i = 0; i < height; i++) {
+            for (j = 0; j < width; j++) {
+                if(inPixels[i* height + j]==255) {
+                    //modulo
+                    distanza = (int) Math.sqrt(Math.pow((maxDistanza-1)-(i*height), 2)+Math.pow(j, 2));
+                    //fase
+                    //fase = (int) inPixelsFase[i * height +j];
+                    matSpazioParametri[distanza][fase]+=1;
+                }
+            }
+        }
+        
+        return matSpazioParametri;
     }
 
 }
