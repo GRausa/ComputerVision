@@ -341,9 +341,9 @@ public class PgmUtilities {
                 
                 //No Bordi
                 if(i!=0 & j!=0 & j!=width-1 & i!=height-1){
-                    //maschera 
-                    Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i+1) * width + (j-1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
-                    Gy = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i-1) * width + j] - inPixels[(i-1) * width + (j+1)] + inPixels[(i+1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i+1) * width + j] + inPixels[(i+1) * width + (j+1)]);
+                    //maschera
+                    Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i-1) * width + (j+1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
+                    Gy = (float) ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
                     Gm = (float) Math.sqrt(Math.pow(Gx, 2)+Math.pow(Gy, 2));
                     outPixels[i * width + j]=(int) Gm;        
                     sumGm+=Gm;
