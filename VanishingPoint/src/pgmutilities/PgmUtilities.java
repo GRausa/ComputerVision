@@ -317,7 +317,7 @@ public class PgmUtilities {
     //--------------------------------------------------------//
     //------------------ Isotropic Operation -----------------//
     //--------------------------------------------------------// 
-    public PGM isotropicPGM(PGM pgmIn) {
+    public PGM isotropicModulePGM(PGM pgmIn) {
         if (pgmIn == null) {
             System.err.println("Error! No input data. Please Check.");
             return null;
@@ -374,4 +374,44 @@ public class PgmUtilities {
         return pgmOut;
     }
 
+    public PGM isotropicPhasePGM(PGM pgmIn) {
+        if (pgmIn == null) {
+            System.err.println("Error! No input data. Please Check.");
+            return null;
+        }
+        
+        //Isotropic delete one row and one coloumn
+        PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
+
+        int i,j;
+        float Gx, Gy, arctan=0;
+
+        int width = pgmIn.getWidth();
+        int height = pgmIn.getHeight();
+
+        int[] inPixels = pgmIn.getPixels();
+        int[] outPixels = new int[width * height];
+        
+        // Modify Pixels
+        for (i = 0; i < height; i++) {
+            for (j = 0; j < width; j++) {
+                
+                //No Bordi
+                if(i!=0 & j!=0 & j!=width-1 & i!=height-1){
+                    //maschera
+                    Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i-1) * width + (j+1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
+                    Gy = (float) ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
+                    arctan = (float) Math.atan2(Gy, Gx);
+                    outPixels[i * width + j]=(int) arctan;
+                }
+                else{
+                    outPixels[i * width + j]=0;
+                }
+            }
+        }
+               
+        pgmOut.setPixels(outPixels);
+
+        return pgmOut;
+    }
 }

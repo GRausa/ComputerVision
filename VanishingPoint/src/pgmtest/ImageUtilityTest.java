@@ -43,10 +43,15 @@ public class ImageUtilityTest {
         imgOut = pgmUtil.invertPGM(imgIn);
         pgmUtil.writePGM(imgOut, "invert.pgm");
         
-        //isotropic image
+        //isotropic module image
         pgmUtil.resetPGM(imgOut);
-        imgOut = pgmUtil.isotropicPGM(imgIn);
-        pgmUtil.writePGM(imgOut, "isotropic.pgm");
+        imgOut = pgmUtil.isotropicModulePGM(imgIn);
+        pgmUtil.writePGM(imgOut, "isotropicModule.pgm");
+        
+        //isotropic phase image
+        pgmUtil.resetPGM(imgOut);
+        imgOut = pgmUtil.isotropicPhasePGM(imgIn);
+        pgmUtil.writePGM(imgOut, "isotropicPhase.pgm");
         
         // calculate histogram and write it in a file
         int i;
