@@ -374,49 +374,6 @@ public class PgmUtilities {
         return pgmOut;
     }
     
-    //--------------------------------------------------------//
-    //------------------- Spazio Parametri -------------------//
-    //--------------------------------------------------------// 
-    public int[][] spazioParametri (PGM pgmIn) {
-        if (pgmIn == null) {
-            System.err.println("Error! No input data. Please Check.");
-            return null;
-        }
-        int i,j;
-        int width = pgmIn.getWidth();
-        int height = pgmIn.getHeight();
-        
-        PGM pgmModuloIsotropic = this.isotropicPGM(pgmIn);
-        //PGM pgmFaseIsotropic = this.isotropicFasePgm(pgmIn(;
-        int maxFase = 180;
-        int maxDistanza = (int) Math.sqrt(Math.pow(pgmIn.getHeight(), 2)+Math.pow(pgmIn.getWidth(), 2));
-        
-        int[] inPixels = pgmModuloIsotropic.getPixels();
-        //int [] inPixelsFase = pgmFaseIsotropic.getPixels();
-        int[][] matSpazioParametri = new int[maxDistanza][maxFase];
-        
-        //azzero SpazioParametri
-        for(i=0 ; i<maxDistanza ; i++){
-            for(j=0 ; j<maxFase ; j++){
-                matSpazioParametri[i][j]=0;
-            }
-        }
-        int distanza, fase;
-        // Modify Pixels
-        for (i = 0; i < height; i++) {
-            for (j = 0; j < width; j++) {
-                if(inPixels[i* height + j]==255) {
-                    //modulo
-                    distanza = (int) Math.sqrt(Math.pow((maxDistanza-1)-(i*height), 2)+Math.pow(j, 2));
-                    //fase
-                    //fase = (int) inPixelsFase[i * height +j];
-                    matSpazioParametri[distanza][fase]+=1;
-                }
-            }
-        }
-        
-        return matSpazioParametri;
-    }
 
     public PGM isotropicPhasePGM(PGM pgmIn) {
         if (pgmIn == null) {
@@ -427,7 +384,7 @@ public class PgmUtilities {
         //Isotropic delete one row and one coloumn
         PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
 
-        int i,j;
+        int i,j, phase;
         float Gx, Gy, arctan=0;
 
         int width = pgmIn.getWidth();
@@ -446,7 +403,8 @@ public class PgmUtilities {
                     Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i-1) * width + (j+1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
                     Gy = (float) ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
                     arctan = (float) Math.atan2(Gy, Gx);
-                    outPixels[i * width + j]=(int) arctan;
+                    phase = (int) (arctan*180/Math.PI);
+                    outPixels[i * width + j]=(int) phase;
                 }
                 else{
                     outPixels[i * width + j]=0;
@@ -457,5 +415,49 @@ public class PgmUtilities {
         pgmOut.setPixels(outPixels);
 
         return pgmOut;
+    }
+    
+    
+    //--------------------------------------------------------//
+    //------------------- Spazio Parametri -------------------//
+    //--------------------------------------------------------// 
+    public int[][] spazioParametri (PGM pgmIn) {
+        if (pgmIn == null) {
+            System.err.println("Error! No input data. Please Check.");
+            return null;
+        }
+        int i,j;
+        int width = pgmIn.getWidth();
+        int height = pgmIn.getHeight();
+        
+        PGM pgmModuleIsotropic = this.isotropicModulePGM(pgmIn);
+        PGM pgmPhaseIsotropic = this.isotropicPhasePGM(pgmIn);
+        int maxPhase = 180;
+        int maxDistanza = (int) Math.sqrt(Math.pow(pgmIn.getHeight(), 2)+Math.pow(pgmIn.getWidth(), 2));
+        
+        int[] inModulePixels = pgmModuleIsotropic.getPixels();
+        int[] inPhasePixels = pgmPhaseIsotropic.getPixels();
+        int[][] matSpazioParametri = new int[maxDistanza][maxPhase];
+        
+        //azzero SpazioParametri
+        for(i=0 ; i<maxDistanza ; i++){
+            for(j=0 ; j<maxPhase ; j++){
+                matSpazioParametri[i][j]=0;
+            }
+        }
+        int distanza, phase;
+        // Riempio spazio parametri
+        for (i = 0; i < height; i++) {
+            for (j = 0; j < width; j++) {
+                if(inModulePixels[i* height + j]==255) {
+                    //modulo
+                    distanza = (int) Math.sqrt(Math.pow((height-i), 2)+Math.pow((j+1), 2));
+                    //fase
+                    phase = (int) inPhasePixels[i * height +j];
+                    matSpazioParametri[distanza][phase]+=1;
+                }
+            }
+        }        
+        return matSpazioParametri;
     }
 }
