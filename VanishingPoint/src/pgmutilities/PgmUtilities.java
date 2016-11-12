@@ -431,7 +431,7 @@ public class PgmUtilities {
         }
         int i,j;
         
-        int maxPhase = 180;
+        int maxPhase = 181; //vettore da 0 a 180 
         int maxDistanza = (int) Math.sqrt(Math.pow(pgmIn.getHeight(), 2)+Math.pow(pgmIn.getWidth(), 2));
         
         PGM pgmModuleIsotropic = this.isotropicModulePGM(pgmIn);
@@ -463,7 +463,20 @@ public class PgmUtilities {
                     matSpazioParametri[distanza][phase]+=1;
                 }
             }
-        }        
+        }      
+        
+        // Stampo spazio parametri (esempio)
+        int check=8;
+        for(i = 0 ; i < maxDistanza ; i++){
+            for(j = 0 ; j < maxPhase ; j++){
+                System.out.print(matSpazioParametri[i][j]+" ");
+                if(matSpazioParametri[i][j]>check){
+                    System.out.println("\nPicco: "+matSpazioParametri[i][j]+" modulo: "+i+" angolo: "+j+"\n");
+                }
+            }
+            System.out.println();
+        }
+        
         return matSpazioParametri;
     }
 }
