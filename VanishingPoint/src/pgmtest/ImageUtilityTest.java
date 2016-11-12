@@ -53,6 +53,10 @@ public class ImageUtilityTest {
         imgOut = pgmUtil.isotropicPhasePGM(imgIn);
         pgmUtil.writePGM(imgOut, "isotropicPhase.pgm");
         
+        //spazio parametri
+        pgmUtil.resetPGM(imgOut);
+        int[][] matSpazioParametri = pgmUtil.spazioParametri(imgIn);
+                
         // calculate histogram and write it in a file
         int i;
         int[] histogram = pgmUtil.histogramPGM(imgIn);

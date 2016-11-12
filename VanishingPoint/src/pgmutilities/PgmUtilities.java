@@ -356,7 +356,7 @@ public class PgmUtilities {
         
         //media Gm
         int mediaGm = (int) sumGm/inPixels.length;
-        System.out.println("MediaGm: "+mediaGm);
+        //System.out.println("MediaGm: "+mediaGm);
         
         //threshold in base alla media Gm
         //Gm * 2 il risultato mi sembra migliore
@@ -404,6 +404,9 @@ public class PgmUtilities {
                     Gy = (float) ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
                     arctan = (float) Math.atan2(Gy, Gx);
                     phase = (int) (arctan*180/Math.PI);
+                    if(phase<0){
+                        phase+=180;
+                    }
                     outPixels[i * width + j]=(int) phase;
                 }
                 else{
@@ -427,21 +430,24 @@ public class PgmUtilities {
             return null;
         }
         int i,j;
-        int width = pgmIn.getWidth();
-        int height = pgmIn.getHeight();
         
-        PGM pgmModuleIsotropic = this.isotropicModulePGM(pgmIn);
-        PGM pgmPhaseIsotropic = this.isotropicPhasePGM(pgmIn);
         int maxPhase = 180;
         int maxDistanza = (int) Math.sqrt(Math.pow(pgmIn.getHeight(), 2)+Math.pow(pgmIn.getWidth(), 2));
         
+        PGM pgmModuleIsotropic = this.isotropicModulePGM(pgmIn);
+        PGM pgmPhaseIsotropic = this.isotropicPhasePGM(pgmIn);
+        
+        int width = pgmIn.getWidth();
+        int height = pgmIn.getHeight();
+        
         int[] inModulePixels = pgmModuleIsotropic.getPixels();
         int[] inPhasePixels = pgmPhaseIsotropic.getPixels();
+        
         int[][] matSpazioParametri = new int[maxDistanza][maxPhase];
         
         //azzero SpazioParametri
-        for(i=0 ; i<maxDistanza ; i++){
-            for(j=0 ; j<maxPhase ; j++){
+        for(i = 0 ; i < maxDistanza ; i++){
+            for(j = 0 ; j < maxPhase ; j++){
                 matSpazioParametri[i][j]=0;
             }
         }
@@ -449,12 +455,12 @@ public class PgmUtilities {
         // Riempio spazio parametri
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
-                if(inModulePixels[i* height + j]==255) {
+                if(inModulePixels[i * width + j]==255) {
                     //modulo
                     distanza = (int) Math.sqrt(Math.pow((height-i), 2)+Math.pow((j+1), 2));
                     //fase
-                    phase = (int) inPhasePixels[i * height +j];
-                    matSpazioParametri[distanza][phase]+=1;
+                    phase = (int) inPhasePixels[i * width + j];
+                    matSpazioParametri[distanza][0]+=1;
                 }
             }
         }        
