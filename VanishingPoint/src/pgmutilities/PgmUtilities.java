@@ -460,7 +460,7 @@ public class PgmUtilities {
                     distanza = (int) Math.sqrt(Math.pow((height-i), 2)+Math.pow((j+1), 2));
                     //fase
                     phase = (int) inPhasePixels[i * width + j];
-                    matSpazioParametri[distanza][0]+=1;
+                    matSpazioParametri[distanza][phase]+=1;
                 }
             }
         }        
