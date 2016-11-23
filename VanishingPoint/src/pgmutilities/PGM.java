@@ -1,5 +1,7 @@
 package pgmutilities;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author user
@@ -99,4 +101,43 @@ public class PGM {
         }
         return count;
     }
+    
+    public void printLine(ArrayList<Line> arrayLine){ 
+        for(Line l : arrayLine){
+            int rho = l.getRho();
+            int theta = l.getTheta();
+            int r,x,y;
+            switch(theta){
+                case 0: //ciclo righe
+                    r = rho;
+                    for(int i=0 ; i<height ; i++){
+                        pixels[i*width+r]=180;
+                    }
+                    break;
+                case 90:
+                    y = (int) (rho*Math.sin(Math.toRadians(theta)));
+                    r=height-y;
+                    for(int i=0 ; i<width ; i++){
+                        pixels[r*width+i]=180;
+                    }
+                    break;
+                default:
+                    double m = Math.tan(Math.toRadians(theta));
+                    x = (int) (rho*Math.cos(Math.toRadians(theta)));
+                    y = (int) (rho*Math.sin(Math.toRadians(theta)));           
+                    //ho tutto -> y = -1/m (x-x1)+y1
+                    for (int j = 0; j < width; j++) {
+                        r = (int) (height-((-1/m)*((j-x)+y)));
+                        if(r>=0 && r<height){
+                            pixels[r*width+j]=180;
+                        }
+                    }
+                    break;
+            }
+                             
+        }
+    
+    }
+
+    
 }

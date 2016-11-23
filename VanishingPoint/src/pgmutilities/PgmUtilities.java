@@ -5,6 +5,7 @@
 package pgmutilities;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
@@ -195,124 +196,6 @@ public class PgmUtilities {
             System.err.println("\nIOException. Check input Data.");
         }
     }
-
-    //*************** SOME BASIC OPERATIONS *****************//
-    //-------------------------------------------------------//
-    //----- Invert Pixels GrayScale value inside images -----//
-    //--------------- for Different FileType ----------------//
-    //-------------------------------------------------------// 
-    public PGM invertPGM(PGM pgmIn) {
-        if (pgmIn == null) {
-            System.err.println("Error! No input data. Please Check.");
-            return null;
-        }
-
-        PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
-        int i, inv;
-        int max = pgmIn.getMax_val();
-        int width = pgmIn.getWidth();
-        int height = pgmIn.getHeight();
-
-        // Writing Pixels
-        for (i = 0; i < width * height; i++) {
-            // Invert GrayScale Value
-            inv = max - pgmIn.getPixels()[i];
-            pgmOut.getPixels()[i] = inv;
-        }
-
-        return pgmOut;
-    }
-
-    //-------------------------------------------------------//
-    //---------------- Flip Image Horizontally --------------//
-    //-------------------------------------------------------// 
-    public PGM hflipPGM(PGM pgmIn) {
-        if (pgmIn == null) {
-            System.err.println("Error! No input data. Please Check.");
-            return null;
-        }
-
-        PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
-
-        int i, j;
-        int hfp;
-
-        int width = pgmIn.getWidth();
-        int height = pgmIn.getHeight();
-
-        int[] inputPixels = pgmIn.getPixels();
-        int[] flipPixels = new int[width * height];
-
-        // Modify Pixels
-        for (i = 0; i < height; i++) {
-            for (j = 0; j < width; j++) {
-                // Flip GrayScale Value on width
-                hfp = inputPixels[i * width + j];
-                flipPixels[i * width + (width - j - 1)] = hfp;
-            }
-        }
-
-        pgmOut.setPixels(flipPixels);
-
-        return pgmOut;
-    }
-
-    //-------------------------------------------------------//
-    //------------------ Copy a PGM Image -------------------//
-    //-------------------------------------------------------// 
-    public PGM copyPGM(PGM pgmIn) {
-        if (pgmIn == null) {
-            System.err.println("Error! No input data. Please Check.");
-            return null;
-        }
-        PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
-
-        int i;
-
-        int width = pgmIn.getWidth();
-        int height = pgmIn.getHeight();
-
-        int[] inPixels = pgmIn.getPixels();
-        int[] outPixels = new int[width * height];
-
-        // Copy image
-        for (i = 0; i < width * height; i++) {
-            // Copy image
-            outPixels[i] = inPixels[i];
-        }
-
-        pgmOut.setPixels(outPixels);
-
-        return pgmOut;
-    }
-
-    //--------------------------------------------------------//
-    //------------------ Calculate Histogram -----------------//
-    //--------------------------------------------------------// 
-    public int[] histogramPGM(PGM pgm) {
-        if (pgm == null) {
-            System.err.println("Error! No input data. Please Check.");
-            return null;
-        }
-
-        int i, index;
-
-        int[] inPixels = pgm.getPixels();
-        int width = pgm.getWidth();
-        int height = pgm.getHeight();
-        int max_val = pgm.getMax_val();
-
-        // if max_val is 255 each pixel of the image can have a value between [0;255]
-        // so histogram have a dimension of 256
-        int[] histogram = new int[max_val + 1];
-
-        for (i = 0; i < width * height; i++) {
-            index = inPixels[i];
-            histogram[index]++;
-        }
-
-        return histogram;
-    }
     
     //--------------------------------------------------------//
     //------------------ Isotropic Operation -----------------//
@@ -360,17 +243,20 @@ public class PgmUtilities {
         
         //threshold in base alla media Gm
         //Gm * 2 il risultato mi sembra migliore
-        for(i=0 ; i<width*height ; i++){
-            if(outPixels[i]<mediaGm*2.5){
-                outPixels[i]=0;
+        for (i = 0; i < height; i++) {
+            for (j = 0; j < width; j++) {
+                if(outPixels[i*width + j]<mediaGm){
+                    outPixels[i * width + j]=0;                                    
+                }
+                else{
+                    outPixels[i * width + j]=255;
+                }
+                System.out.print(outPixels[i * width + j]+"\t");    
             }
-            else{
-                outPixels[i]=255;
-            }
+            System.out.println("");
         }
         
-        pgmOut.setPixels(outPixels);
-
+        pgmOut.setPixels(outPixels);        
         return pgmOut;
     }
     
@@ -384,7 +270,7 @@ public class PgmUtilities {
         //Isotropic delete one row and one coloumn
         PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
 
-        int i,j, phase;
+        int i,j, phase=0;
         float Gx, Gy, arctan=0;
 
         int width = pgmIn.getWidth();
@@ -403,16 +289,20 @@ public class PgmUtilities {
                     Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i-1) * width + (j+1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
                     Gy = (float) ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
                     arctan = (float) Math.atan2(Gy, Gx);
-                    phase = (int) (arctan*180/Math.PI);
-                    if(phase<0){
-                        phase+=180;
-                    }
+                    phase = (int) (arctan*180/Math.PI);         
+                    //shift di +90 da gradiente a bordo
+                    phase+=90;
+                    //rendo fase a 0 a 360
+                    if(phase<0)
+                        phase=360+phase;                    
                     outPixels[i * width + j]=(int) phase;
                 }
                 else{
                     outPixels[i * width + j]=0;
                 }
+                System.out.print(phase+"\t");
             }
+            System.out.println();
         }
                
         pgmOut.setPixels(outPixels);
@@ -424,15 +314,15 @@ public class PgmUtilities {
     //--------------------------------------------------------//
     //------------------- Spazio Parametri -------------------//
     //--------------------------------------------------------// 
-    public int[][] spazioParametri (PGM pgmIn) {
+    public PGM spazioParametri (PGM pgmIn) {
         if (pgmIn == null) {
             System.err.println("Error! No input data. Please Check.");
             return null;
         }
         int i,j;
         
-        int maxPhase = 181; //vettore da 0 a 180 
-        int maxDistanza = (int) Math.sqrt(Math.pow(pgmIn.getHeight(), 2)+Math.pow(pgmIn.getWidth(), 2));
+        int maxPhase = 361; //vettore da 0 a 180 
+        int maxRho = (int) Math.sqrt(Math.pow(pgmIn.getHeight(), 2)+Math.pow(pgmIn.getWidth(), 2));
         
         PGM pgmModuleIsotropic = this.isotropicModulePGM(pgmIn);
         PGM pgmPhaseIsotropic = this.isotropicPhasePGM(pgmIn);
@@ -443,40 +333,97 @@ public class PgmUtilities {
         int[] inModulePixels = pgmModuleIsotropic.getPixels();
         int[] inPhasePixels = pgmPhaseIsotropic.getPixels();
         
-        int[][] matSpazioParametri = new int[maxDistanza][maxPhase];
+        int[][] matSpazioParametri = new int[maxRho][maxPhase];
         
         //azzero SpazioParametri
-        for(i = 0 ; i < maxDistanza ; i++){
+        for(i = 0 ; i < maxRho ; i++){
             for(j = 0 ; j < maxPhase ; j++){
                 matSpazioParametri[i][j]=0;
             }
         }
-        int distanza, phase;
+        int rho, phase;
+        
         // Riempio spazio parametri
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
                 if(inModulePixels[i * width + j]==255) {
-                    //modulo
-                    distanza = (int) Math.sqrt(Math.pow((height-i), 2)+Math.pow((j+1), 2));
-                    //fase
-                    phase = (int) inPhasePixels[i * width + j];
-                    matSpazioParametri[distanza][phase]+=1;
+                    //angolo 
+                    int phaseIsotropic = (int)inPhasePixels[i * width + j];
+                    switch(phaseIsotropic){
+                        case 90:
+                            rho=j+1;
+                            phase=0;
+                            break;
+                        case 270:
+                            rho=j+1;
+                            phase=0;
+                            break;
+                        case 180:
+                            rho=height-i;
+                            phase=90;
+                            break;
+                        case 0:
+                            rho=height-i;
+                            phase=90;
+                            break;
+                        default:
+                            //retta trovata y=mx+q
+                          
+                            //trovo m
+                            double phaseRad = Math.toRadians(phaseIsotropic);
+                            double m = Math.tan(phaseRad);
+                            
+                            //trovo q=y-mx
+                            double q = (height-i)-(m*j);
+                            
+                            //fase retta tangente
+                            double m1 = Math.atan(-1/m);                          
+                            
+                            //trovo intersezione
+                            int x=(int) (q/(m1-m));
+                            int y=(int) (m1*q/(m1-m));
+                            
+                            //rho
+                            rho=(int) Math.sqrt((Math.pow(x, 2))+Math.pow(y, 2));
+                            
+                            //ricavo fase m1 gradi                            
+                            int phaseTrovata = (int) Math.toDegrees(m1);
+                            
+                            if(x*y>0){//semiquadro positivo
+                                phase=phaseTrovata;
+                            }
+                            else{
+                                if(x<0){//2 semiquadro
+                                    phase=phaseTrovata+180;
+                                }
+                                else{
+                                    phase=360+phaseTrovata;
+                                }
+                            }
+                    }
+                    //System.out.println("rho: "+rho+" phase:"+ phase);
+                    matSpazioParametri[rho][phase]+=1;
+                    
                 }
             }
         }      
         
-        // Stampo spazio parametri (esempio)
+        //trovare picchi spazio parametri
+        
+        //esempio soglia
+        ArrayList<Line> arrayLine = new ArrayList<>();
         int check=8;
-        for(i = 0 ; i < maxDistanza ; i++){
+        System.out.println("Picchi");
+        for(i = 0 ; i < maxRho ; i++){
             for(j = 0 ; j < maxPhase ; j++){
-                System.out.print(matSpazioParametri[i][j]+" ");
-                if(matSpazioParametri[i][j]>check){
-                    System.out.println("\nPicco: "+matSpazioParametri[i][j]+" modulo: "+i+" angolo: "+j+"\n");
+                if(matSpazioParametri[i][j]>=check){
+                    arrayLine.add(new Line(i,j));
+                    System.out.println("Rho: "+i+" Theta: "+j);
                 }
             }
-            System.out.println();
-        }
+        }    
+        pgmIn.printLine(arrayLine);
         
-        return matSpazioParametri;
+        return pgmIn;
     }
 }

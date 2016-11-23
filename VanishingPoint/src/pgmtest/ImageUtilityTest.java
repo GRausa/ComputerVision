@@ -16,9 +16,9 @@ public class ImageUtilityTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
         String namefile = "image.pgm";
-
-        //System.out.println(args[0]);
+        
         PgmUtilities pgmUtil = new PgmUtilities();
 
         PGM imgIn = pgmUtil.readPGM(namefile);
@@ -28,52 +28,16 @@ public class ImageUtilityTest {
         }
 
         PGM imgOut = pgmUtil.newPGM(imgIn.getWidth(), imgIn.getHeight(), imgIn.getMax_val());
-
-        // copy the image
-        imgOut = pgmUtil.copyPGM(imgIn);
-        pgmUtil.writePGM(imgOut, "copy.pgm");
-
-        // flip the image
-        pgmUtil.resetPGM(imgOut);
-        imgOut = pgmUtil.hflipPGM(imgIn);
-        pgmUtil.writePGM(imgOut, "flip.pgm");
-
-        // invert the image
-        pgmUtil.resetPGM(imgOut);
-        imgOut = pgmUtil.invertPGM(imgIn);
-        pgmUtil.writePGM(imgOut, "invert.pgm");
-        
+               
         //isotropic module image
         pgmUtil.resetPGM(imgOut);
         imgOut = pgmUtil.isotropicModulePGM(imgIn);
         pgmUtil.writePGM(imgOut, "isotropicModule.pgm");
         
-        //isotropic phase image
-        pgmUtil.resetPGM(imgOut);
-        imgOut = pgmUtil.isotropicPhasePGM(imgIn);
-        pgmUtil.writePGM(imgOut, "isotropicPhase.pgm");
-        
         //spazio parametri
         pgmUtil.resetPGM(imgOut);
-        int[][] matSpazioParametri = pgmUtil.spazioParametri(imgIn);
-                
-        // calculate histogram and write it in a file
-        int i;
-        int[] histogram = pgmUtil.histogramPGM(imgIn);
-
-        FileWriter fstream;
-        try {
-            fstream = new FileWriter("histogram.dat");
-            BufferedWriter out = new BufferedWriter(fstream);
-
-            for (i = 0; i < 256; i++) {
-                System.out.println("HISTOGRAM[" + i + "] = " + histogram[i]);
-                out.write(i + " " + histogram[i] + "\n");
-            }
-
-            out.close();
-        } catch (IOException ex) {
-            System.err.println("\nIOException. Check input Data.");
-        }
+        imgOut = pgmUtil.spazioParametri(imgIn);
+        pgmUtil.writePGM(imgOut, "draw.pgm");
+                  
     }
 }
