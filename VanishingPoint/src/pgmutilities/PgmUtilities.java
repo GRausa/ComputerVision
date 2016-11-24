@@ -198,6 +198,62 @@ public class PgmUtilities {
     }
     
     //--------------------------------------------------------//
+    //---------------------- Bordo nero ----------------------//
+    //--------------------------------------------------------// 
+    public PGM addCornice(PGM pgmIn) {
+        if (pgmIn == null) {
+            System.err.println("Error! No input data. Please Check.");
+            return null;
+        }
+        //add 100px alto destra sinistra
+        int addPixel = 100;
+        int pgmInWidth = pgmIn.getWidth(); 
+        int pgmInHeight = pgmIn.getHeight(); 
+        
+        int pgmOutWidth = pgmInWidth+(2*addPixel);//destra sinistra
+        int pgmOutHeight = pgmInHeight+(2*addPixel);//alto basso
+        PGM pgmOut = new PGM(pgmOutWidth, pgmOutHeight, pgmIn.getMax_val());
+        
+        int[] outPixels = new int[pgmOutHeight * pgmOutWidth];
+        int[] inPixels = pgmIn.getPixels();
+        
+        //aggiungo cornice superiore righe = pgmOutHeight/2 , colonne = pgmOutWidth + pgmInWidth
+        for(int i = 0 ; i<addPixel ; i++){
+            for(int j = 0 ; j < pgmOutWidth ; j++){
+                outPixels[ i * pgmOutWidth + j] = 180;
+            }
+        }
+        
+        //aggiungo le 2 colonne destra centro sinistra 
+        for(int i = addPixel ; i<pgmOutHeight-addPixel ; i++){
+            //aggiungo sinistra
+            for(int z=0 ; z<addPixel ; z++){
+                outPixels[ i * pgmOutWidth + z]=50;
+            }
+            
+            //aggiungo centro
+            for(int j = addPixel ; j < addPixel+pgmInWidth ; j++){
+                outPixels[ i * pgmOutWidth + j] = inPixels[(i-addPixel) * pgmInWidth + (j-addPixel)];
+            }
+            
+            //aggiungo destra
+            for(int z=pgmOutWidth-addPixel ; z < pgmOutWidth ; z++){
+                outPixels[ i * pgmOutWidth + z]=100;
+            }
+        }
+        
+        //aggiungo cornice inferiore righe = pgmOutHeight/2 , colonne = pgmOutWidth + pgmInWidth
+        for(int i = pgmOutHeight-addPixel ; i < pgmOutHeight ; i++){
+            for(int j = 0 ; j < pgmOutWidth ; j++){
+                outPixels[ i * pgmOutWidth + j] = 200;
+            }
+        }
+        
+        pgmOut.setPixels(outPixels);
+        return pgmOut;       
+    }
+    
+    //--------------------------------------------------------//
     //------------------ Isotropic Operation -----------------//
     //--------------------------------------------------------// 
     public PGM isotropicModulePGM(PGM pgmIn) {
