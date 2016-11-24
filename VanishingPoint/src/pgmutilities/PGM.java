@@ -106,7 +106,7 @@ public class PGM {
         for(Line l : arrayLine){
             int rho = l.getRho();
             int theta = l.getTheta();
-            int r,x,y;
+            int r,x,y;           
             switch(theta){
                 case 0: //ciclo righe
                     r = rho;
@@ -127,7 +127,7 @@ public class PGM {
                     y = (int) (rho*Math.sin(Math.toRadians(theta)));           
                     //ho tutto -> y = -1/m (x-x1)+y1
                     for (int j = 0; j < width; j++) {
-                        r = (int) (height-((-1/m)*((j-x)+y)));
+                        r = (int) (height-((-1/m)*(j-x)+y));
                         if(r>=0 && r<height){
                             pixels[r*width+j]=180;
                         }

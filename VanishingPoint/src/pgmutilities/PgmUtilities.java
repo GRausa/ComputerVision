@@ -386,15 +386,16 @@ public class PgmUtilities {
                             //rho
                             rho=(int) Math.sqrt((Math.pow(x, 2))+Math.pow(y, 2));
                             
-                            //ricavo fase m1 gradi                            
-                            int phaseTrovata = (int) Math.toDegrees(m1);
+                            //ricavo fase m1 gradi   
+                            
+                            int phaseTrovata = (int) Math.toDegrees(m1);                            
                             
                             if(x*y>0){//semiquadro positivo
                                 phase=phaseTrovata;
                             }
                             else{
                                 if(x<0){//2 semiquadro
-                                    phase=phaseTrovata+180;
+                                    phase=phaseTrovata+180;                                    
                                 }
                                 else{
                                     phase=360+phaseTrovata;
@@ -402,6 +403,9 @@ public class PgmUtilities {
                             }
                     }
                     //System.out.println("rho: "+rho+" phase:"+ phase);
+                    
+                    if(phase>=360)//da verificare perhè 361,362...
+                        phase=0;
                     matSpazioParametri[rho][phase]+=1;
                     
                 }
@@ -412,7 +416,7 @@ public class PgmUtilities {
         
         //esempio soglia
         ArrayList<Line> arrayLine = new ArrayList<>();
-        int check=8;
+        int check=10;
         System.out.println("Picchi");
         for(i = 0 ; i < maxRho ; i++){
             for(j = 0 ; j < maxPhase ; j++){
