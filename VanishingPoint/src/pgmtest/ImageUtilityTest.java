@@ -40,8 +40,8 @@ public class ImageUtilityTest {
         pgmUtil.writePGM(imgOut, "cornice.pgm");
                   
         //spazio parametri
-        pgmUtil.resetPGM(imgOut);
-        imgOut = pgmUtil.spazioParametri(imgIn);
+        //pgmUtil.resetPGM(imgOut);
+        imgOut = pgmUtil.spazioParametri(imgOut);
         pgmUtil.writePGM(imgOut, "draw.pgm");
         
         

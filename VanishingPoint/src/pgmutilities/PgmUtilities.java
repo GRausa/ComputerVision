@@ -206,7 +206,7 @@ public class PgmUtilities {
             return null;
         }
         //add 100px alto destra sinistra
-        int addPixel = 100;
+        int addPixel = 400;
         int pgmInWidth = pgmIn.getWidth(); 
         int pgmInHeight = pgmIn.getHeight(); 
         
@@ -220,7 +220,7 @@ public class PgmUtilities {
         //aggiungo cornice superiore righe = pgmOutHeight/2 , colonne = pgmOutWidth + pgmInWidth
         for(int i = 0 ; i<addPixel ; i++){
             for(int j = 0 ; j < pgmOutWidth ; j++){
-                outPixels[ i * pgmOutWidth + j] = 180;
+                outPixels[ i * pgmOutWidth + j] = 0;
             }
         }
         
@@ -228,7 +228,7 @@ public class PgmUtilities {
         for(int i = addPixel ; i<pgmOutHeight-addPixel ; i++){
             //aggiungo sinistra
             for(int z=0 ; z<addPixel ; z++){
-                outPixels[ i * pgmOutWidth + z]=50;
+                outPixels[ i * pgmOutWidth + z]=0;
             }
             
             //aggiungo centro
@@ -238,14 +238,14 @@ public class PgmUtilities {
             
             //aggiungo destra
             for(int z=pgmOutWidth-addPixel ; z < pgmOutWidth ; z++){
-                outPixels[ i * pgmOutWidth + z]=100;
+                outPixels[ i * pgmOutWidth + z]=0;
             }
         }
         
         //aggiungo cornice inferiore righe = pgmOutHeight/2 , colonne = pgmOutWidth + pgmInWidth
         for(int i = pgmOutHeight-addPixel ; i < pgmOutHeight ; i++){
             for(int j = 0 ; j < pgmOutWidth ; j++){
-                outPixels[ i * pgmOutWidth + j] = 200;
+                outPixels[ i * pgmOutWidth + j] = 0;
             }
         }
         
@@ -345,7 +345,7 @@ public class PgmUtilities {
                     Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i-1) * width + (j+1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
                     Gy = (float) ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
                     arctan = (float) Math.atan2(Gy, Gx);
-                    phase = (int) (arctan*180/Math.PI);         
+                    phase = (int) (Math.toDegrees(arctan));         
                     //shift di +90 da gradiente a bordo
                     phase+=90;
                     //rendo fase a 0 a 360
@@ -472,7 +472,7 @@ public class PgmUtilities {
         
         //esempio soglia
         ArrayList<Line> arrayLine = new ArrayList<>();
-        int check=10;
+        int check=40;
         System.out.println("Picchi");
         for(i = 0 ; i < maxRho ; i++){
             for(j = 0 ; j < maxPhase ; j++){
