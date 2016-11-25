@@ -447,10 +447,11 @@ public class PgmUtilities {
                             int phaseTrovata = (int) Math.round(Math.toDegrees(Math.atan(m1)));
                             
                             
+                            
                             if(phaseTrovata==360)
                                 phaseTrovata=0;
                             //---> DA VEDERE <---- QUESTA CONDIZ
-                            if(x*y>=0){//semiquadro positivo o 3 quadrante
+                            if(x*y>0){//semiquadro positivo o 3 quadrante
                                 //if(phaseTrovata>=0)
                                     phase=phaseTrovata;
                                 //else
@@ -467,14 +468,9 @@ public class PgmUtilities {
                             }
                     }
                     
-                    //if(phase>=360)//da verificare perhè 361,362...
-                      //  phase=0;
-                    //---> momentaneamente no
-                    
-                        
-                    //if(phase !=90 & phase !=270 & phase !=180 & phase !=0)
-                    
-                    //if(phase>10 & phase <80 | phase > 100 & phase < 170 | phase > 190 & phase < 350)
+                    //escludo alcune circostanze
+                    //if(phase !=90 & phase !=270 & phase !=180 & phase !=0)                    
+                    if(phase>10 & phase <80 | phase > 100 & phase < 170 | phase > 190 & phase < 350)
                         matSpazioParametri[rho][phase]+=1;
                     
                 }
@@ -485,7 +481,7 @@ public class PgmUtilities {
         
         //esempio soglia
         ArrayList<Line> arrayLine = new ArrayList<>();
-        int check=30;
+        int check=15;
         System.out.println("Picchi");
         for(i = 0 ; i < maxRho ; i++){
             for(j = 0 ; j < maxPhase ; j++){

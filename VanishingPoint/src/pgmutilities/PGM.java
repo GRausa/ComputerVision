@@ -118,7 +118,7 @@ public class PGM {
                     y = (int) (rho*Math.sin(Math.toRadians(theta)));
                     r=height-y;
                     for(int i=0 ; i<width ; i++){
-                        pixels[r*width+i]=180;
+                        pixels[r*width+i]=255;
                     }
                     break;
                 default:
