@@ -1,8 +1,5 @@
 package pgmtest;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import pgmutilities.PgmUtilities;
 import pgmutilities.PGM;
 
@@ -27,21 +24,17 @@ public class ImageUtilityTest {
             return;
         }
 
-        PGM imgOut = pgmUtil.newPGM(imgIn.getWidth(), imgIn.getHeight(), imgIn.getMax_val());
-               
+        //cornice -> utilizzata in seguito per ricavare vanishing point al di fuori della figura   
+        PGM img = pgmUtil.addCornice(imgIn);
+        pgmUtil.writePGM(img, "cornice.pgm");
+        //PGM img = imgIn;
         //isotropic module image
-        pgmUtil.resetPGM(imgOut);
-        imgOut = pgmUtil.isotropicModulePGM(imgIn);
-        pgmUtil.writePGM(imgOut, "isotropicModule.pgm");
-        
-        //cornice -> utilizzata in seguito per ricavare vanishing point al di fuori della figura
-        pgmUtil.resetPGM(imgOut);
-        imgOut = pgmUtil.addCornice(imgIn);
-        pgmUtil.writePGM(imgOut, "cornice.pgm");
+        PGM imgOutIsotropic = pgmUtil.isotropicModulePGM(img);
+        pgmUtil.writePGM(imgOutIsotropic, "isotropicModule.pgm"); 
                   
         //spazio parametri
         //pgmUtil.resetPGM(imgOut);
-        imgOut = pgmUtil.spazioParametri(imgOut);
+        PGM imgOut = pgmUtil.spazioParametri(img);
         pgmUtil.writePGM(imgOut, "draw.pgm");
         
         

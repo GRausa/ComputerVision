@@ -123,13 +123,13 @@ public class PGM {
                     break;
                 default:
                     double m = Math.tan(Math.toRadians(theta));
-                    x = (int) (rho*Math.cos(Math.toRadians(theta)));
-                    y = (int) (rho*Math.sin(Math.toRadians(theta)));           
+                    x = (int) Math.round(rho*Math.cos(Math.toRadians(theta)));
+                    y = (int) Math.round(rho*Math.sin(Math.toRadians(theta)));           
                     //ho tutto -> y = -1/m (x-x1)+y1
                     for (int j = 0; j < width; j++) {
                         r = (int) (height-((-1/m)*(j-x)+y));
                         if(r>=0 && r<height){
-                            pixels[r*width+j]=180;
+                            pixels[r*width+j]=220;
                         }
                     }
                     break;

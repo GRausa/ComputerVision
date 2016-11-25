@@ -206,7 +206,7 @@ public class PgmUtilities {
             return null;
         }
         //add 100px alto destra sinistra
-        int addPixel = 400;
+        int addPixel = 200;
         int pgmInWidth = pgmIn.getWidth(); 
         int pgmInHeight = pgmIn.getHeight(); 
         
@@ -266,7 +266,7 @@ public class PgmUtilities {
         PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
 
         int i,j;
-        float Gx, Gy, Gm, sumGm=0;
+        double Gx, Gy, Gm, sumGm=0;
 
         int width = pgmIn.getWidth();
         int height = pgmIn.getHeight();
@@ -281,10 +281,10 @@ public class PgmUtilities {
                 //No Bordi
                 if(i!=0 & j!=0 & j!=width-1 & i!=height-1){
                     //maschera
-                    Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i-1) * width + (j+1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
-                    Gy = (float) ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
-                    Gm = (float) Math.sqrt(Math.pow(Gx, 2)+Math.pow(Gy, 2));
-                    outPixels[i * width + j]=(int) Gm;        
+                    Gx = ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i-1) * width + (j+1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
+                    Gy = ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
+                    Gm = Math.sqrt(Math.pow(Gx, 2)+Math.pow(Gy, 2));
+                    outPixels[i * width + j]=(int) Math.round(Gm); //arrotonda intero più vicino       
                     sumGm+=Gm;
                 }
                 else{
@@ -294,14 +294,14 @@ public class PgmUtilities {
         }
         
         //media Gm
-        int mediaGm = (int) sumGm/inPixels.length;
+        double mediaGm = sumGm/inPixels.length;
         //System.out.println("MediaGm: "+mediaGm);
         
         //threshold in base alla media Gm
         //Gm * 2 il risultato mi sembra migliore
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
-                if(outPixels[i*width + j]<mediaGm){
+                if(outPixels[i*width + j]<mediaGm*2.5){
                     outPixels[i * width + j]=0;                                    
                 }
                 else{
@@ -327,7 +327,7 @@ public class PgmUtilities {
         PGM pgmOut = new PGM(pgmIn.getWidth(), pgmIn.getHeight(), pgmIn.getMax_val());
 
         int i,j, phase=0;
-        float Gx, Gy, arctan=0;
+        double Gx, Gy;
 
         int width = pgmIn.getWidth();
         int height = pgmIn.getHeight();
@@ -342,16 +342,17 @@ public class PgmUtilities {
                 //No Bordi
                 if(i!=0 & j!=0 & j!=width-1 & i!=height-1){
                     //maschera
-                    Gx = (float) ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i-1) * width + (j+1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
-                    Gy = (float) ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
-                    arctan = (float) Math.atan2(Gy, Gx);
-                    phase = (int) (Math.toDegrees(arctan));         
+                    Gx = ( - inPixels[(i-1) * width + (j-1)] - Math.sqrt(2)*inPixels[i * width + (j-1)] - inPixels[(i+1) * width + (j-1)] + inPixels[(i-1) * width + (j+1)] + Math.sqrt(2)*inPixels[i * width + (j+1)] + inPixels[(i+1) * width + (j+1)]);
+                    Gy = ( + inPixels[(i-1) * width + (j-1)] + Math.sqrt(2)*inPixels[(i-1) * width + j] + inPixels[(i-1) * width + (j+1)] - inPixels[(i+1) * width + (j-1)] - Math.sqrt(2)*inPixels[(i+1) * width + j] - inPixels[(i+1) * width + (j+1)]);
+                    phase = (int) Math.round(Math.toDegrees(Math.atan2(Gy, Gx)));         
                     //shift di +90 da gradiente a bordo
                     phase+=90;
                     //rendo fase a 0 a 360
                     if(phase<0)
-                        phase=360+phase;                    
-                    outPixels[i * width + j]=(int) phase;
+                        phase=360+phase;   
+                    if(phase==360)
+                        phase=0;
+                    outPixels[i * width + j] = phase;
                 }
                 else{
                     outPixels[i * width + j]=0;
@@ -377,8 +378,8 @@ public class PgmUtilities {
         }
         int i,j;
         
-        int maxPhase = 361; //vettore da 0 a 180 
-        int maxRho = (int) Math.sqrt(Math.pow(pgmIn.getHeight(), 2)+Math.pow(pgmIn.getWidth(), 2));
+        int maxPhase = 360; //vettore da 0 a 259
+        int maxRho = (int) Math.ceil(Math.sqrt(Math.pow(pgmIn.getHeight(), 2)+Math.pow(pgmIn.getWidth(), 2))); //diagonale arrotondo eccesso
         
         PGM pgmModuleIsotropic = this.isotropicModulePGM(pgmIn);
         PGM pgmPhaseIsotropic = this.isotropicPhasePGM(pgmIn);
@@ -397,72 +398,84 @@ public class PgmUtilities {
                 matSpazioParametri[i][j]=0;
             }
         }
-        int rho, phase;
+        int rho, phase=0;
         
         // Riempio spazio parametri
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
                 if(inModulePixels[i * width + j]==255) {
                     //angolo 
-                    int phaseIsotropic = (int)inPhasePixels[i * width + j];
+                    int phaseIsotropic = inPhasePixels[i * width + j];
                     switch(phaseIsotropic){
                         case 90:
-                            rho=j+1;
+                            rho=j;
                             phase=0;
                             break;
                         case 270:
-                            rho=j+1;
+                            rho=j;
                             phase=0;
                             break;
                         case 180:
-                            rho=height-i;
+                            rho=height-i-1;
                             phase=90;
                             break;
                         case 0:
-                            rho=height-i;
+                            rho=height-i-1;
                             phase=90;
                             break;
                         default:
                             //retta trovata y=mx+q
                           
-                            //trovo m
-                            double phaseRad = Math.toRadians(phaseIsotropic);
-                            double m = Math.tan(phaseRad);
+                            //trovo m                            
+                            double m = Math.tan(Math.toRadians(phaseIsotropic));
                             
                             //trovo q=y-mx
-                            double q = (height-i)-(m*j);
+                            double q = (height-i-1)-(m*j);
                             
-                            //fase retta tangente
-                            double m1 = Math.atan(-1/m);                          
+                            //pendenza retta tangente
+                            double m1 = -1/m;                          
                             
                             //trovo intersezione
-                            int x=(int) (q/(m1-m));
-                            int y=(int) (m1*q/(m1-m));
+                            int x=(int) Math.round(-q/(m-m1));
+                            int y=(int) Math.round(m*(-q/(m-m1))+q);
                             
                             //rho
-                            rho=(int) Math.sqrt((Math.pow(x, 2))+Math.pow(y, 2));
+                            rho=(int) Math.round(Math.sqrt((Math.pow(x, 2))+Math.pow(y, 2)));
                             
                             //ricavo fase m1 gradi   
                             
-                            int phaseTrovata = (int) Math.toDegrees(m1);                            
+                            int phaseTrovata = (int) Math.round(Math.toDegrees(Math.atan(m1)));
                             
-                            if(x*y>0){//semiquadro positivo
-                                phase=phaseTrovata;
+                            
+                            if(phaseTrovata==360)
+                                phaseTrovata=0;
+                            //---> DA VEDERE <---- QUESTA CONDIZ
+                            if(x*y>=0){//semiquadro positivo o 3 quadrante
+                                //if(phaseTrovata>=0)
+                                    phase=phaseTrovata;
+                                //else
+                                 //   phase=360+phaseTrovata;
+                                
                             }
                             else{
                                 if(x<0){//2 semiquadro
-                                    phase=phaseTrovata+180;                                    
+                                    phase=phaseTrovata+180;                                      
                                 }
                                 else{
                                     phase=360+phaseTrovata;
                                 }
                             }
                     }
-                    //System.out.println("rho: "+rho+" phase:"+ phase);
                     
-                    if(phase>=360)//da verificare perhè 361,362...
-                        phase=0;
-                    matSpazioParametri[rho][phase]+=1;
+                    //if(phase>=360)//da verificare perhè 361,362...
+                      //  phase=0;
+                    //---> momentaneamente no
+                    
+                        
+                    //if(phase !=90 & phase !=270 & phase !=180 & phase !=0)
+                    
+                    //if(phase>10 & phase <80 | phase > 100 & phase < 170 | phase > 190 & phase < 350)
+                        matSpazioParametri[rho][phase]+=1;
                     
                 }
             }
@@ -472,7 +485,7 @@ public class PgmUtilities {
         
         //esempio soglia
         ArrayList<Line> arrayLine = new ArrayList<>();
-        int check=40;
+        int check=30;
         System.out.println("Picchi");
         for(i = 0 ; i < maxRho ; i++){
             for(j = 0 ; j < maxPhase ; j++){
