@@ -200,13 +200,13 @@ public class PgmUtilities {
     //--------------------------------------------------------//
     //---------------------- Bordo nero ----------------------//
     //--------------------------------------------------------// 
-    public PGM addCornice(PGM pgmIn) {
+    public PGM addCornice(PGM pgmIn, int cornice) {
         if (pgmIn == null) {
             System.err.println("Error! No input data. Please Check.");
             return null;
         }
         //add 100px alto destra sinistra
-        int addPixel = 200;
+        int addPixel = cornice;
         int pgmInWidth = pgmIn.getWidth(); 
         int pgmInHeight = pgmIn.getHeight(); 
         
@@ -307,9 +307,9 @@ public class PgmUtilities {
                 else{
                     outPixels[i * width + j]=255;
                 }
-                System.out.print(outPixels[i * width + j]+"\t");    
+                //System.out.print(outPixels[i * width + j]+"\t");    
             }
-            System.out.println("");
+            //System.out.println("");
         }
         
         pgmOut.setPixels(outPixels);        
@@ -357,9 +357,9 @@ public class PgmUtilities {
                 else{
                     outPixels[i * width + j]=0;
                 }
-                System.out.print(phase+"\t");
+                //System.out.print(phase+"\t");
             }
-            System.out.println();
+            //System.out.println();
         }
                
         pgmOut.setPixels(outPixels);
@@ -371,7 +371,7 @@ public class PgmUtilities {
     //--------------------------------------------------------//
     //------------------- Spazio Parametri -------------------//
     //--------------------------------------------------------// 
-    public PGM spazioParametri (PGM pgmIn) {
+    public PGM spazioParametri (PGM pgmIn, int check) {
         if (pgmIn == null) {
             System.err.println("Error! No input data. Please Check.");
             return null;
@@ -469,8 +469,9 @@ public class PgmUtilities {
                     }
                     
                     //escludo alcune circostanze
-                    //if(phase !=90 & phase !=270 & phase !=180 & phase !=0)                    
-                    if(phase>10 & phase <80 | phase > 100 & phase < 170 | phase > 190 & phase < 350)
+                    if(phase !=90 & phase !=270 & phase !=180 & phase !=0)                    
+                    //if(phase>10 & phase <80 | phase > 100 & phase < 170 | phase > 190 & phase < 350)
+                    //if((phase >= 0 & phase <= 45 | phase >= 135 & phase <= 225 | phase >= 315) & phase!=0 & phase!= 180)
                         matSpazioParametri[rho][phase]+=1;
                     
                 }
@@ -481,11 +482,11 @@ public class PgmUtilities {
         
         //esempio soglia
         ArrayList<Line> arrayLine = new ArrayList<>();
-        int check=15;
+        int ch=check;
         System.out.println("Picchi");
         for(i = 0 ; i < maxRho ; i++){
             for(j = 0 ; j < maxPhase ; j++){
-                if(matSpazioParametri[i][j]>=check){
+                if(matSpazioParametri[i][j]>=ch){
                     arrayLine.add(new Line(i,j));
                     System.out.println("Rho: "+i+" Theta: "+j);
                 }

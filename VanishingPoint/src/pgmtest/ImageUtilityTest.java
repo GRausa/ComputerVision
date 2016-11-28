@@ -25,7 +25,7 @@ public class ImageUtilityTest {
         }
 
         //cornice -> utilizzata in seguito per ricavare vanishing point al di fuori della figura   
-        PGM img = pgmUtil.addCornice(imgIn);
+        PGM img = pgmUtil.addCornice(imgIn, 300);
         pgmUtil.writePGM(img, "cornice.pgm");
         //PGM img = imgIn;
         //isotropic module image
@@ -34,7 +34,7 @@ public class ImageUtilityTest {
                   
         //spazio parametri
         //pgmUtil.resetPGM(imgOut);
-        PGM imgOut = pgmUtil.spazioParametri(img);
+        PGM imgOut = pgmUtil.spazioParametri(img, 15); //check
         pgmUtil.writePGM(imgOut, "draw.pgm");
         
         
